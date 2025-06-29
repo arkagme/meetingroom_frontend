@@ -93,70 +93,72 @@ function Timeline({ rooms }) {
         <h2>Today's Schedule - {new Date().toLocaleDateString('en-GB')}</h2>
       </div>
       
-      <div className="timeline-grid">
-        <div className="timeline-row timeline-header-row">
-          <div className="room-header">Room</div>
-          {timeSlots.map(slot => (
-            <div key={slot} className="time-header">
-              {slot}
-            </div>
-          ))}
-        </div>
-
-        {rooms.map(room => {
-          const bookingSpans = getBookingSpans(room.id);
-          
-          return (
-            <div key={room.id} className="timeline-row">
-              <div className="room-name">
-                {room.name}
+      <div className="timeline-wrapper">
+        <div className="timeline-grid">
+          <div className="timeline-row timeline-header-row">
+            <div className="room-header">Room</div>
+            {timeSlots.map(slot => (
+              <div key={slot} className="time-header">
+                {slot}
               </div>
-              
-              {timeSlots.map((slot, slotIndex) => {
-                const bookingSpan = bookingSpans.find(span => span.startSlot === slotIndex);
-                const isOccupied = isSlotOccupied(room.id, slotIndex, bookingSpans);
+            ))}
+          </div>
+
+          {rooms.map(room => {
+            const bookingSpans = getBookingSpans(room.id);
+            
+            return (
+              <div key={room.id} className="timeline-row">
+                <div className="room-name">
+                  {room.name}
+                </div>
                 
-                if (bookingSpan) {
-                  return (
-                    <div
-                      key={`${room.id}-${slot}`}
-                      className="time-slot booking-span"
-                      style={{ 
-                        gridColumn: `span ${bookingSpan.span}`,
-                        backgroundColor: '#6366f1',
-                        color: 'white',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 'bold',
-                        fontSize: '12px',
-                        textAlign: 'center',
-                        padding: '4px'
-                      }}
-                      title={`${bookingSpan.booking.meeting_title} (${bookingSpan.booking.user_name})`}
-                    >
-                      <div>
-                        <div>{bookingSpan.booking.meeting_title}</div>
-                        <small>{bookingSpan.booking.user_name}</small>
+                {timeSlots.map((slot, slotIndex) => {
+                  const bookingSpan = bookingSpans.find(span => span.startSlot === slotIndex);
+                  const isOccupied = isSlotOccupied(room.id, slotIndex, bookingSpans);
+                  
+                  if (bookingSpan) {
+                    return (
+                      <div
+                        key={`${room.id}-${slot}`}
+                        className="time-slot booking-span"
+                        style={{ 
+                          gridColumn: `span ${bookingSpan.span}`,
+                          backgroundColor: '#6366f1',
+                          color: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 'bold',
+                          fontSize: '12px',
+                          textAlign: 'center',
+                          padding: '4px'
+                        }}
+                        title={`${bookingSpan.booking.meeting_title} (${bookingSpan.booking.user_name})`}
+                      >
+                        <div>
+                          <div>{bookingSpan.booking.meeting_title}</div>
+                          <small>{bookingSpan.booking.user_name}</small>
+                        </div>
                       </div>
-                    </div>
-                  );
-                } else if (isOccupied) {
-                  return null;
-                } else {
-                  return (
-                    <div
-                      key={`${room.id}-${slot}`}
-                      className="time-slot empty-slot"
-                      title="Available"
-                    >
-                    </div>
-                  );
-                }
-              })}
-            </div>
-          );
-        })}
+                    );
+                  } else if (isOccupied) {
+                    return null;
+                  } else {
+                    return (
+                      <div
+                        key={`${room.id}-${slot}`}
+                        className="time-slot empty-slot"
+                        title="Available"
+                      >
+                      </div>
+                    );
+                  }
+                })}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {bookings.length === 0 && (
@@ -171,8 +173,7 @@ function Timeline({ rooms }) {
           background: white;
           border-radius: 8px;
           box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          max-width: 100%;
-          overflow: hidden;
+          width: 100%;
         }
 
         .timeline-header h2 {
@@ -181,21 +182,25 @@ function Timeline({ rooms }) {
           font-size: 24px;
         }
 
-        .timeline-grid {
-          display: flex;
-          flex-direction: column;
+        .timeline-wrapper {
           border: 1px solid #e5e7eb;
           border-radius: 8px;
           overflow-x: auto;
           overflow-y: visible;
-          max-width: 100%;
+          width: 100%;
+        }
+
+        .timeline-grid {
+          display: flex;
+          flex-direction: column;
+          width: fit-content;
+          min-width: 100%;
         }
 
         .timeline-row {
           display: grid;
-          grid-template-columns: 150px repeat(23, minmax(80px, 1fr));
+          grid-template-columns: 150px repeat(${timeSlots.length}, 80px);
           min-height: 60px;
-          min-width: fit-content;
         }
 
         .room-header {
@@ -203,7 +208,7 @@ function Timeline({ rooms }) {
           left: 0;
           z-index: 11;
           background: #6366f1;
-          min-width: 150px;
+          width: 150px;
         }
 
         .timeline-header-row {
@@ -223,7 +228,10 @@ function Timeline({ rooms }) {
           justify-content: center;
           font-size: 11px;
           white-space: nowrap;
-          min-width: 80px;
+        }
+
+        .time-header {
+          width: 80px;
         }
 
         .room-name {
@@ -238,7 +246,7 @@ function Timeline({ rooms }) {
           position: sticky;
           left: 0;
           z-index: 10;
-          min-width: 150px;
+          width: 150px;
         }
 
         .time-slot {
@@ -246,7 +254,7 @@ function Timeline({ rooms }) {
           border-bottom: 1px solid #e5e7eb;
           position: relative;
           min-height: 60px;
-          min-width: 80px;
+          width: 80px;
         }
 
         .empty-slot {
