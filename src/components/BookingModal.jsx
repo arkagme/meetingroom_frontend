@@ -63,8 +63,8 @@ function BookingModal({ room, user, onClose }) {
     const endHour = end.getHours();
     const endMinutes = end.getMinutes();
 
-    if (startHour < 9 || (endHour > 20) || (endHour === 20 && endMinutes > 0)) {
-      setError('Bookings are only allowed between 9 AM and 8 PM');
+    if (startHour < 9 || (endHour > 22) || (endHour === 22 && endMinutes > 0)) {
+      setError('Bookings are only allowed between 9 AM and 10 PM');
       return false;
     }
 
@@ -202,7 +202,7 @@ function BookingModal({ room, user, onClose }) {
                 value={formData.startTime}
                 onChange={handleChange}
                 min="09:00"
-                max="20:00"
+                max="22:00"
                 required
               />
             </div>
@@ -216,7 +216,7 @@ function BookingModal({ room, user, onClose }) {
                 value={formData.endTime}
                 onChange={handleChange}
                 min="09:30"
-                max="20:00"
+                max="22:00"
                 required
               />
             </div>

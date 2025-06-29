@@ -22,9 +22,9 @@ function Timeline({ rooms }) {
 
   const generateTimeSlots = () => {
     const slots = [];
-    for (let hour = 9; hour <= 20; hour++) {
+    for (let hour = 9; hour <= 22; hour++) {
       slots.push(`${hour.toString().padStart(2, '0')}:00`);
-      if (hour < 20) {
+      if (hour < 22) {
         slots.push(`${hour.toString().padStart(2, '0')}:30`);
       }
     }
@@ -36,7 +36,7 @@ function Timeline({ rooms }) {
     const hours = time.getHours();
     const minutes = time.getMinutes();
     
-    if (hours < 9 || hours >= 20) return -1;
+    if (hours < 9 || hours >= 22) return -1;
     
     const slotIndex = (hours - 9) * 2 + (minutes >= 30 ? 1 : 0);
     return slotIndex;
